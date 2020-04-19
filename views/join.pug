@@ -1,4 +1,11 @@
 extends layouts/main
 
 block content
-    p join
+    .form-container
+        form(action=routes.login, method="post")
+            input(type="name", name="name", placeholder="Name")
+            input(type="email", name="email", placeholder="Email")
+            input(type="password", name="password", placeholder="password")
+            input(type="password", name="password1", placeholder="password again")
+            input(type="submit", value="Join Now")
+        include partials/socialLogin

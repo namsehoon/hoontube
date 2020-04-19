@@ -1,6 +1,18 @@
-export const home = (req, res) => res.render("home", { pageTitle: "Home" });
-export const search = (req, res) =>
-  res.render("search", { pageTitle: "Search" });
+import { videos } from "../db";
+
+export const home = (req, res) => {
+  res.render("home", { pageTitle: "Home", videos });
+};
+
+export const search = (req, res) => {
+  //쿼리:정보를 질의하는것
+  //쿼리에서 정보를 가져올려면 메소드가 GET이여야한다.
+  const {
+    query: { term: tomato },
+  } = req;
+  res.render("search", { pageTitle: "Search", tomato });
+};
+
 export const upload = (req, res) =>
   res.render("upload", { pageTitle: "Upload" });
 export const videoDetail = (req, res) =>
