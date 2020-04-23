@@ -17,6 +17,7 @@ export const search = (req, res) => {
   const {
     query: { term: tomato },
   } = req;
+  console.log(req.query.term);
   res.render("search", { pageTitle: "Search", tomato });
 };
 
@@ -38,9 +39,47 @@ export const postUpload = async (req, res) => {
   res.redirect(routes.videoDetail(newVideo.id));
 };
 
-export const videoDetail = (req, res) =>
-  res.render("videoDetail", { pageTitle: "Video Detail" });
-export const editVideo = (req, res) =>
-  res.render("editVideo", { pageTitle: "Edit Video" });
+//params는 어떠한 /:id, /:potato 데이터를 가지고 오는것
+
+export const videoDetail = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    console.log(video);
+    res.render("videoDetail", { pageTitle: "Video Detail", video });
+  } catch (error) {
+    console.log(error);
+    res.redirect(routes.home);
+  }
+};
+
+// get은 뭔가를 채워넣는 작업, post는 업데이트하고 redirect하는 작업
+export const getEditVideo = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const video = await Video.findById(id);
+    res.render("editVideo", { pageTitle: "Edit Video", video });
+  } catch (error) {
+    res.redirect(routes.home);
+  }
+};
+
+//중괄호중 하나는, 어떻게 오브젝트를 찾냐, 두번쨰는 업데이트하고 싶은 오브젝트
+export const postEditVideo = async (req, res) => {
+  const {
+    params: { id },
+    body: { title, description },
+  } = req;
+  try {
+    await Video.findOneAndUpdate({ id }, { title, description });
+    res.redirect(routes.videoDetail(id));
+  } catch (error) {
+    res.redirect(routes.home);
+  }
+};
 export const deleteVideo = (req, res) =>
   res.render("deleteVideo", { pageTitle: "Delete Video" });

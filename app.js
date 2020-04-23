@@ -14,6 +14,7 @@ const app = express();
 //미들웨어
 app.set("view engine", "pug");
 app.use(helmet());
+app.use("/uploads", express.static("uploads"));
 app.use(morgan("dev"));
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
