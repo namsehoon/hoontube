@@ -1,9 +1,10 @@
 import routes from "../routes";
 import Video from "../models/Video";
 
+//sort는 정렬 -1은 새로올린게 가장 최신으로 뜨게 만드는것
 export const home = async (req, res) => {
   try {
-    const videos = await Video.find({});
+    const videos = await Video.find({}).sort({ _id: -1 });
     res.render("home", { pageTitle: "Home", videos });
   } catch (error) {
     console.log(error);
@@ -11,14 +12,19 @@ export const home = async (req, res) => {
   }
 };
 
-export const search = (req, res) => {
-  //쿼리:정보를 질의하는것
-  //쿼리에서 정보를 가져올려면 메소드가 GET이여야한다.
+//쿼리:정보를 질의하는것
+//쿼리에서 정보를 가져올려면 메소드가 GET이여야한다.
+//빈 객체인 videos는 만약 어떤 비디오도 찾지 못하면 videos로 감
+//length는 배열임 [].length 라고 콘솔 해보삼
+export const search = async (req, res) => {
   const {
     query: { term: tomato },
   } = req;
-  console.log(req.query.term);
-  res.render("search", { pageTitle: "Search", tomato });
+  let videos = [];
+  try {
+    videos = await Video.find({ title: { $regex: tomato, $option: "i" } });
+  } catch {}
+  res.render("search", { pageTitle: "Search", tomato, videos });
 };
 
 export const getUpload = (req, res) => {
@@ -75,11 +81,18 @@ export const postEditVideo = async (req, res) => {
     body: { title, description },
   } = req;
   try {
-    await Video.findOneAndUpdate({ id }, { title, description });
+    await Video.findOneAndUpdate({ _id: id }, { title, description });
     res.redirect(routes.videoDetail(id));
   } catch (error) {
     res.redirect(routes.home);
   }
 };
-export const deleteVideo = (req, res) =>
-  res.render("deleteVideo", { pageTitle: "Delete Video" });
+export const deleteVideo = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    await Video.findOneAndRemove({ _id: id });
+  } catch (error) {}
+  res.redirect(routes.home);
+};
