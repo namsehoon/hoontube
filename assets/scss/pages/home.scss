@@ -1,0 +1,8 @@
+.home-videos {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(200px, 500px));
+  grid-gap: 20px;
+  .videoBlock {
+    grid-column: span 2;
+  }
+}

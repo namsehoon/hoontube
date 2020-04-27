@@ -27,13 +27,14 @@
     "postcss-loader": "^3.0.0",
     "pug": "^2.0.4",
     "sass-loader": "^8.0.2",
+    "scss-loader": "0.0.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "dev:server": "nodemon --exec babel-node init.js --delay 2",
-    "dev:assets": "cross-env WEBPACK_ENV=development webpack -w",
-    "build:assets": "cross-env WEBPACK_ENV=production webpack"
+    "dev:server": "nodemon --exec babel-node init.js --delay 2 --ignore 'scss' ",
+    "dev:assets": "set WEBPACK_ENV=development&&webpack -w",
+    "build:assets": "set WEBPACK_ENV=production&&webpack"
   },
   "devDependencies": {
     "eslint-config-prettier": "^6.11.0",
