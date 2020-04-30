@@ -9,7 +9,6 @@ export const globalMiddleware = (req, res, next) => {
   res.locals.routes = routes;
   //passport가 user도 요청해줌. 템플릿에서 쓸려면 해줘야댐
   res.locals.user = req.user || null;
-  console.log(req.user);
   next();
 };
 
