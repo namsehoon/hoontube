@@ -5,3 +5,10 @@ block content
         .user__detail-header
             img.avatar(src=user.avatarUrl)
             h6.userName=user.name
+        if user.id === loggedUser.id
+            .editBtns
+                a(href=`/users${routes.editProfile}`)
+                    button edit profile
+                a(href=`/users${routes.changePassword}`)    
+                    button change password
+                

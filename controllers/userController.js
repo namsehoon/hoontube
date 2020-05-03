@@ -114,7 +114,27 @@ export const logout = (req, res) => {
 };
 export const userDetail = (req, res) =>
   res.render("userDetail", { pageTitle: "user detail" });
-export const editProfile = (req, res) =>
+
+export const getEditProfile = (req, res) =>
   res.render("editProfile", { pageTitle: "editProfile" });
+
+export const postEditProfile = async (req, res) => {
+  const {
+    body: { name, email },
+    file,
+  } = req;
+  try {
+    await User.findByIdAndUpdate(req.user.id, {
+      name,
+      email,
+      //만약 파일이 있으면 파일.패스 없으면 req.user.ava--
+      avatarUrl: file ? file.path : req.user.avatarUrl,
+    });
+    res.redirect(routes.me);
+  } catch (error) {
+    res.render("editProfile", { pageTitle: "Edit profile" });
+  }
+};
+
 export const changePassword = (req, res) =>
   res.render("changePassword", { pageTitle: "changPassword" });

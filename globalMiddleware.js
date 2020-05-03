@@ -3,6 +3,7 @@ import routes from "./routes";
 import multer from "multer";
 
 const uploadVideo = multer({ dest: "uploads/videos/" });
+const uploadAvatar = multer({ dest: "uploads/avatars/" });
 
 export const globalMiddleware = (req, res, next) => {
   res.locals.siteName = "HoonTube";
@@ -30,5 +31,5 @@ export const onlyPrivate = (req, res, next) => {
 
 // '' 여기 안에는  들어올 파일의 이름임
 export const uploadVideoMiddleware = uploadVideo.single("videoFile");
-
+export const uploadAvatarMiddleware = uploadAvatar.single("avatar");
 //파일 잘못 보냈으때 mongo -> use hoon-tube -> shoe collections -> db.video.remove({})
