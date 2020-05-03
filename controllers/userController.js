@@ -43,6 +43,10 @@ export const postLogin = passport.authenticate("local", {
 //깃헙으로 사용자를 보내는거
 export const githubLogin = passport.authenticate("github");
 
+export const googleLogin = passport.authenticate("google", {
+  scope: "https://www.googleapis.com/auth/plus.login",
+});
+
 //깃허브에서 사용자를 콜백하는거
 export const githubLoginCallback = async (_, __, profile, cb) => {
   const {
@@ -69,8 +73,39 @@ export const githubLoginCallback = async (_, __, profile, cb) => {
   }
 };
 
+export const googleLoginCallback = async (_, __, profile, cb) => {
+  const {
+    _json: { id, name, email },
+  } = profile;
+  try {
+    const user = await User.findOne({ email });
+    if (user) {
+      user.googleId = id;
+      user.save();
+      //에러 없음, 유저찾음
+      return cb(null, user);
+    }
+    const newUser = await User.create({
+      name,
+      email,
+      googleId: id,
+    });
+    return cb(null, newUser);
+  } catch (error) {
+    return cb(error);
+  }
+};
+
 export const postGitLogin = (req, res) => {
   res.redirect(routes.home);
+};
+
+export const postgGoogleLogin = (req, res) => {
+  res.redirect(routes.home);
+};
+
+export const getMe = (req, res) => {
+  res.render("userDetail", { pageTitle: "user detail", user: req.user });
 };
 
 export const logout = (req, res) => {
