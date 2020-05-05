@@ -1,6 +1,7 @@
 import passport from "passport";
 import routes from "../routes";
 import User from "../models/User";
+import { response } from "express";
 
 export const getJoin = (req, res) => {
   res.render("join", { pageTitle: "join" });
@@ -74,8 +75,11 @@ export const githubLoginCallback = async (_, __, profile, cb) => {
 };
 
 export const googleLoginCallback = async (_, __, profile, cb) => {
+  //왜그러는지 모르겠지만, 이메일을 안줌
   const {
-    _json: { id, name, email },
+    _json: { name },
+    id,
+    email,
   } = profile;
   try {
     const user = await User.findOne({ email });
@@ -112,8 +116,18 @@ export const logout = (req, res) => {
   req.logout();
   res.redirect(routes.home);
 };
-export const userDetail = (req, res) =>
-  res.render("userDetail", { pageTitle: "user detail" });
+export const userDetail = async (req, res) => {
+  const {
+    params: { id },
+  } = req;
+  try {
+    const user = await User.findById(id);
+    console.log(user);
+    res.render("userDetail", { pageTitle: "User Detail", user });
+  } catch (error) {
+    res.redirect(routes.home);
+  }
+};
 
 export const getEditProfile = (req, res) =>
   res.render("editProfile", { pageTitle: "editProfile" });
@@ -132,9 +146,28 @@ export const postEditProfile = async (req, res) => {
     });
     res.redirect(routes.me);
   } catch (error) {
-    res.render("editProfile", { pageTitle: "Edit profile" });
+    res.redirect(routes.editProfile);
   }
 };
 
-export const changePassword = (req, res) =>
+export const getChangePassword = (req, res) =>
   res.render("changePassword", { pageTitle: "changPassword" });
+
+export const postChangePassword = async (req, res) => {
+  const {
+    body: { oldPassword, newPassword, newPassword1 },
+  } = req;
+  try {
+    if (newPassword !== newPassword1) {
+      res.status(400);
+      res.redirect(`/users/${routes.changePassword}`);
+      return;
+    } else {
+      await req.user.changePassword(oldPassword, newPassword);
+      res.redirect(routes.me);
+    }
+  } catch (error) {
+    res.status(400);
+    res.redirect(`/users/${routes.changePassword}`);
+  }
+};
