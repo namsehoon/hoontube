@@ -1,7 +1,7 @@
 import passport from "passport";
 import routes from "../routes";
 import User from "../models/User";
-import { response } from "express";
+import express from "express";
 
 export const getJoin = (req, res) => {
   res.render("join", { pageTitle: "join" });
@@ -116,13 +116,13 @@ export const logout = (req, res) => {
   req.logout();
   res.redirect(routes.home);
 };
+
 export const userDetail = async (req, res) => {
   const {
     params: { id },
   } = req;
   try {
     const user = await User.findById(id);
-    console.log(user);
     res.render("userDetail", { pageTitle: "User Detail", user });
   } catch (error) {
     res.redirect(routes.home);
