@@ -31,6 +31,10 @@ const GITCALLBACK = "/auth/github/callback";
 const GOOGLE = "/auth/google";
 const GOOGLECALLBACK = "/auth/google/callback";
 
+// api
+const API = "/api";
+const REGISTER_VIEW = "/:id/view";
+
 const routes = {
   home: HOME,
   join: JOIN,
@@ -75,6 +79,8 @@ const routes = {
   me: ME,
   google: GOOGLE,
   googleCB: GOOGLECALLBACK,
+  api: API,
+  register: REGISTER_VIEW,
 };
 
 export default routes;
